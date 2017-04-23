@@ -1,6 +1,7 @@
 #PTO Calculator
 
-# add PTO to bank - accrue 7.16 hours every 2 weeks
+# add PTO to bank - accrue 7.12 hours every 2 weeks
+# 62.61 hours on 4/8/17, next accrual 4/22/17
 # given a date, tally hours accrued since date (possible_PTO)
 
 # subtract PTO manually
