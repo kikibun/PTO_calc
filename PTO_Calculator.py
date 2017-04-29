@@ -1,6 +1,7 @@
 #PTO Calculator
 import datetime
 import sys
+import pickle
 
 vacation = {datetime.date(2017, 10, 6): 5, datetime.date(2017, 6, 7): 7, datetime.date(2017, 8, 2): 3}
 
@@ -15,6 +16,7 @@ days = raw_input('How many days off?: ')
 def current_pto(year, month, day):
     date = datetime.date(year, month, day)
     initial_pto = 62.61
+    save_pto()
     start_date = datetime.date(2017, 4, 8)
     # add PTO to bank - accrue 7.12 hours every 2 weeks
     acc_time = date - start_date
@@ -22,6 +24,18 @@ def current_pto(year, month, day):
     total_pto = (acc_instance * 7.12) + initial_pto
     #print total_pto
     return total_pto
+
+def save_pto():
+    initial_pto_dict = {"initial_pto" : 62.61}
+    with open("pto.txt","w") as file:
+        file.write(pickle.dumps(initial_pto_dict))
+
+def load_pto():
+    with open("pto.txt","r") as file:
+        contents = file.read()
+        py_contents = pickle.loads(contents)
+        print py_contents["initial_pto"]
+#load_pto()
 
 try:
     current_pto(year, month, day)
@@ -43,10 +57,11 @@ def left_pto(days):
     total_pto = current_pto(year, month, day)
     if days == '':
         days = 0
+    days = int(days)
     for i in vacation.keys():
         if datetime.date(year, month, day) > i:
             days += vacation[i]
-    hours_taken = int(days) * 8
+    hours_taken = days * 8
     pto_remain = total_pto - hours_taken
     print 'You will have accrued %s hours of pto.' %(total_pto)
     print 'After your days off, you will have %s hours left.' %(pto_remain)
@@ -56,4 +71,16 @@ try:
 except:
     print 'NUMBERS ONLY'
     raise
-# subtract PTO manually
+
+#store new dates in a file
+def save_vacation_dates():
+    with open("vacation.txt","w") as file:
+        file.write(pickle.dumps(vacation))
+save_vacation_dates()
+
+def load_vacation_dates():
+    with open("vacation.txt","r") as file:
+        contents = file.read()
+        py_contents = pickle.loads(contents)
+        print py_contents
+load_vacation_dates()
